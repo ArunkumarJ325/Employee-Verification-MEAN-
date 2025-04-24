@@ -1,0 +1,20 @@
+<h2>Upload New Document</h2>
+
+<form [formGroup]="form" (ngSubmit)="upload()">
+  <label>Document Type</label>
+  <select formControlName="type" required>
+    <option value="" disabled selected>Select Type</option>
+    <option value="AADHAR">Aadhar</option>
+    <option value="PAN">PAN</option>
+    <option value="ADDRESS_PROOF">Address Proof</option>
+    <option value="QUALIFICATION">Qualification</option>
+  </select>
+
+  <label>Document Number</label>
+  <input type="text" formControlName="documentNumber" required />
+
+  <label>Choose File</label>
+  <input type="file" (change)="onFileChange($event)" required />
+
+  <button type="submit" [disabled]="!form.valid || !selectedFile">Upload</button>
+</form>

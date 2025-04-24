@@ -1,0 +1,61 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <h2>
+    Welcome, {{ managerName }} 👋
+  </h2>
+  <button (click)="logout()">Logout</button>
+</div>
+
+<h2>Pending Approvals</h2>
+<ul>
+  <li *ngFor="let group of pendingGroups" (click)="selectEmployee(group)">
+    {{ group.employee.name }} ({{ group.employee.employeeId }})
+  </li>
+</ul>
+
+<h2>Completed Approvals</h2>
+<ul>
+  <li *ngFor="let group of completedGroups" (click)="selectEmployee(group)">
+    {{ group.employee.name }} ({{ group.employee.employeeId }})
+  </li>
+</ul>
+
+<hr />
+
+<div *ngIf="selectedEmployee">
+  <h3>Documents for {{ selectedEmployee.employee.name }}</h3>
+  <ul>
+    <li *ngFor="let doc of selectedEmployee.documents" style="margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+      <p>
+        <strong>Type:</strong> {{ doc.documentType }}<br />
+        <strong>Number:</strong> {{ doc.documentNumber }}<br />
+        <strong>Status:</strong>
+        <span [ngStyle]="{ color: doc.verifiedStatus === 'PENDING' ? 'orange' : (doc.verifiedStatus === 'APPROVED' ? 'green' : 'red') }">
+          {{ doc.verifiedStatus }}
+        </span>
+      </p>
+
+      <!-- 🔗 File preview -->
+      <a *ngIf="doc.fileUrl" [href]="'http://localhost:5000' + doc.fileUrl" target="_blank">
+        📄 Preview / Download
+      </a>
+
+      <!-- 💬 Manager comment -->
+      <div *ngIf="doc.verifiedStatus !== 'PENDING'">
+        <p><strong>Manager Comment:</strong> {{ doc.comment || 'No comment' }}</p>
+      </div>
+
+      <!-- ✅ HR verification display -->
+      <div *ngIf="doc.finalVerifiedStatus">
+        <p><strong>HR Final Status:</strong> {{ doc.finalVerifiedStatus }}</p>
+        <p><strong>HR Comment:</strong> {{ doc.finalComment || 'No comment' }}</p>
+      </div>
+
+      <!-- 🟠 Manager actions only if pending -->
+      <div *ngIf="doc.verifiedStatus === 'PENDING' && doc._id">
+        <textarea [(ngModel)]="doc.comment" placeholder="Add comment (optional)"></textarea>
+        <button (click)="verify(doc._id, 'APPROVED', doc.comment)">Approve</button>
+        <button (click)="verify(doc._id, 'REJECTED', doc.comment)" style="margin-left: 10px;">Reject</button>
+      </div>
+    </li>
+  </ul>
+</div>

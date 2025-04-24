@@ -1,0 +1,94 @@
+<!-- Top Bar: Welcome + Logout (Always visible) -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <div *ngIf="managerName">
+    <h1>Welcome, {{ managerName }}!</h1>
+  </div>
+  <button (click)="logout()">Logout</button>
+</div>
+
+<!-- Profile Exists -->
+<div *ngIf="profile !== null; else profilenotfound">
+  <!-- Profile Info -->
+  <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+    <p><strong>Address:</strong> {{ profile.address }}</p>
+    <p><strong>Years of Experience:</strong> {{ profile.yearsOfExperience }}</p>
+    <p><strong>Previous Companies:</strong></p>
+    <ul>
+      <li *ngFor="let company of profile.previousCompanies">{{ company }}</li>
+    </ul>
+    <p><strong>Status:</strong> {{ profile.status }}</p>
+    <p><strong>Aadhar Number:</strong> {{ profile.aadharNumber }}</p>
+    <p><strong>PAN Number:</strong> {{ profile.panNumber }}</p>
+  </div>
+
+  <!-- Documents -->
+  <h3 style="margin-top: 30px;">Your Documents</h3>
+
+  <ul *ngIf="documents.length > 0; else noDocs">
+    <li *ngFor="let doc of documents" style="margin-bottom: 15px;">
+      <div>
+        <strong>Type:</strong> {{ doc.type }} <br />
+        <strong>Document Number:</strong> {{ doc.documentNumber }} <br />
+        <strong>Status:</strong> {{ doc.verifiedStatus }} <br />
+        <a [href]="'http://localhost:5000' + doc.fileUrl" target="_blank">
+          <button>Preview / Download</button>
+        </a>
+      </div>
+    </li>
+  </ul>
+
+  <ng-template #noDocs>
+    <p>No documents uploaded yet.</p>
+  </ng-template>
+
+  <!-- Upload -->
+  <button routerLink="/employee/upload" style="margin-top: 20px;">Upload New Document</button>
+</div>
+
+<!-- Profile Not Created: Create Profile Form -->
+<ng-template #profilenotfound>
+  <div style="text-align: center; padding: 30px;">
+    <h2>👤 Profile Not Found</h2>
+    <p>You haven't created your profile yet. Please fill in the details below.</p>
+
+    <!-- Profile Creation Form -->
+    <form (ngSubmit)="createProfile()">
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" [(ngModel)]="profileData.name" name="name" required />
+      </div>
+
+      <div>
+        <label for="address">Address:</label>
+        <input type="text" id="address" [(ngModel)]="profileData.address" name="address" required />
+      </div>
+
+      <div>
+        <label for="yearsOfExperience">Years of Experience:</label>
+        <input type="number" id="yearsOfExperience" [(ngModel)]="profileData.yearsOfExperience" name="yearsOfExperience" required />
+      </div>
+
+      <div>
+        <label for="previousCompanies">Previous Companies:</label>
+        <input type="text" id="previousCompanies" [(ngModel)]="profileData.previousCompanies" name="previousCompanies" required />
+      </div>
+
+      <div>
+        <label for="status">Status:</label>
+        <input type="text" id="status" [(ngModel)]="profileData.status" name="status" required />
+      </div>
+
+      <div>
+        <label for="aadharNumber">Aadhar Number:</label>
+        <input type="text" id="aadharNumber" [(ngModel)]="profileData.aadharNumber" name="aadharNumber" required />
+      </div>
+
+      <div>
+        <label for="panNumber">PAN Number:</label>
+        <input type="text" id="panNumber" [(ngModel)]="profileData.panNumber" name="panNumber" required />
+      </div>
+
+      <button type="submit" style="margin-top: 20px;">Create Profile</button>
+    </form>
+  </div>
+</ng-template>

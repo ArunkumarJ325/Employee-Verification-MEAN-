@@ -1,0 +1,22 @@
+<!-- hr-document-approval.component.html -->
+<div class="document-approval">
+    <h2>HR Document Final Approval</h2>
+  
+    <div *ngFor="let document of documents">
+      <div class="document">
+        <p><strong>Document Number:</strong> {{ document.documentNumber }}</p>
+        <p><strong>Type:</strong> {{ document.type }}</p>
+        <p><strong>Uploaded By:</strong> {{ document.uploadedBy }}</p>
+        <p><strong>Status:</strong> {{ document.finalVerifiedStatus }}</p>
+        <p><strong>Comment:</strong> {{ document.finalComment }}</p>
+  
+        <!-- Display Finalize Approval button if the document status is PENDING -->
+        <button
+          *ngIf="document.finalVerifiedStatus === 'PENDING'"
+          (click)="finalizeApproval(document._id)">
+          Finalize Approval
+        </button>
+      </div>
+    </div>
+  </div>
+  
