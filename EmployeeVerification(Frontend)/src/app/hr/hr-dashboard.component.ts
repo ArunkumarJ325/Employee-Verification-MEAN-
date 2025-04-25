@@ -19,18 +19,26 @@ export class HrDashboardComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.hrName = this.getHRNameFromToken();
+    
     this.loadGroupedDocuments();
+    this.loadManagerName();  // Fetch manager name when component initializes
+
   }
 
-  getHRNameFromToken(): string {
+  loadManagerName() {
     const token = localStorage.getItem('token');
-    if (!token) return '';
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.name || payload.email || 'HR';
-    } catch {
-      return 'HR';
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));  // Decode JWT to get the payload
+      const employeeId = decodedToken.employeeId;
+      console.log(employeeId);
+
+      // Fetch manager name using the employeeId from the token
+      this.http.get<any>(`http://localhost:5000/api/employee/users/${employeeId}`).subscribe({
+        next: (data) => {
+          this.hrName = data.name;  // Assuming 'name' is part of the response
+        },
+        error: () => alert('Failed to load manager details')
+      });
     }
   }
 

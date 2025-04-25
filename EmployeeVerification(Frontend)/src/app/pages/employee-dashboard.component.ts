@@ -15,7 +15,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class EmployeeDashboardComponent implements OnInit {
   profile: any = null;
   documents: any[] = [];
-  managerName: string = ''; // Store manager name here
+  EmployeeName: string = ''; // Store employee name here
 
   profileData: any = {
     name: '',
@@ -36,7 +36,7 @@ export class EmployeeDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchProfile();
-    this.loadManagerName();  // Fetch manager name when component initializes
+    this.loadEmployeeName();  // Fetch employee name when component initializes
   }
 
   // Fetch the profile if it exists
@@ -67,8 +67,8 @@ export class EmployeeDashboardComponent implements OnInit {
     });
   }
 
-  // Fetch manager's name using the employeeId from the JWT token
-  loadManagerName() {
+  // Fetch employee's name using the employeeId from the JWT token
+  loadEmployeeName() {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));  // Decode JWT to get the payload
@@ -78,7 +78,7 @@ export class EmployeeDashboardComponent implements OnInit {
       // Fetch manager name using the employeeId from the token
       this.http.get<any>(`http://localhost:5000/api/employee/users/${employeeId}`).subscribe({
         next: (data) => {
-          this.managerName = data.name;  // Assuming 'name' is part of the response
+          this.EmployeeName = data.name;  // Assuming 'name' is part of the response
         },
         error: () => alert('Failed to load manager details')
       });
@@ -105,4 +105,33 @@ export class EmployeeDashboardComponent implements OnInit {
     this.auth.logout();  // Clear token
     this.router.navigate(['/auth/login']);  // Redirect to login
   }
+
+  //for reupload documents
+  selectedFiles: { [key: string]: File } = {};
+
+  onFileSelected(event: any, docId: string) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFiles[docId] = file;
+    }
+  }
+  
+  reuploadFile(docId: string) {
+    const file = this.selectedFiles[docId];
+    if (file) {
+      this.employeeService.reuploadDocument(docId, file).subscribe({
+        next: (res) => {
+          alert('Document reuploaded successfully');
+          this.fetchDocuments(); // refresh
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Reupload failed');
+        }
+      });
+    } else {
+      alert('Please select a file to upload.');
+    }
+  }
+  
 }

@@ -26,7 +26,7 @@
   <ul>
     <li *ngFor="let doc of selectedEmployee.documents" style="margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
       <p>
-        <strong>Type:</strong> {{ doc.documentType }}<br />
+        <strong>Type:</strong> {{ doc.type }}<br />
         <strong>Number:</strong> {{ doc.documentNumber }}<br />
         <strong>Manager Status:</strong>
         <span [ngStyle]="{ color: doc.verifiedStatus === 'APPROVED' ? 'green' : (doc.verifiedStatus === 'REJECTED' ? 'red' : 'orange') }">

@@ -102,15 +102,20 @@ const getMyDocuments = async (req, res) => {
   try {
     const userId = req.user.id;
     console.log("User ID from token:", userId);
-    const documents = await Document.find({ uploadedBy: userId });
-    console.log("Documents found:", documents.length);
 
+    const documents = await Document.find({ uploadedBy: userId })
+      .populate('verifiedBy', 'name')         // Populate manager name
+      .populate('finalVerifiedBy', 'name');   // Populate HR name
+
+    console.log("Documents found:", documents.length);
+    
     res.status(200).json({ documents });
   } catch (err) {
     console.error('Error fetching employee documents:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 const hrVerifyDocument = async (req, res) => {
   try {
@@ -150,8 +155,42 @@ const getManagerApprovedDocuments = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+//allow user to reupload documents 
+const reuploadDocument = async (req, res) => {
+  try {
+    const documentId = req.params.id;
 
-// GET /api/documents/grouped-status
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const fileUrl = `/uploads/${req.file.filename}`;
+
+    const updatedDoc = await Document.findByIdAndUpdate(
+      documentId,
+      {
+        fileUrl,
+        verifiedStatus: 'PENDING', // reset statuses
+        comment: '',
+        verifiedBy: null,
+        finalVerifiedStatus: 'PENDING',
+        finalComment: '',
+        finalVerifiedBy: null
+      },
+      { new: true }
+    );
+
+    if (!updatedDoc) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+
+    res.status(200).json({ message: 'Document reuploaded successfully', document: updatedDoc });
+  } catch (error) {
+    console.error('Error reuploading document:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 
 
 // Controller method to group documents by employee and their approval status
@@ -283,5 +322,6 @@ module.exports = {
   getGroupedDocumentsForManager,
   hrVerifyDocument,
   getGroupedDocumentsForHR, // ✅ must be exported like this
-  updateDocumentFinalStatus // ✅ must be exported like this
+  updateDocumentFinalStatus,
+  reuploadDocument // ✅ must be exported like this
 };

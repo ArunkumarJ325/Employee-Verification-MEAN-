@@ -38,6 +38,13 @@ router.patch(
   allowRoles(['HR']),
   documentController.updateDocumentFinalStatus
 );
+router.patch(
+  '/reupload/:id',
+  verifyUser,
+  allowRoles(['EMPLOYEE']),
+  upload.single('file'),
+  documentController.reuploadDocument
+);
 
 // Route to get grouped documents for manager
 router.get(

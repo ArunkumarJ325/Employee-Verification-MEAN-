@@ -1,7 +1,7 @@
 <!-- Top Bar: Welcome + Logout (Always visible) -->
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-  <div *ngIf="managerName">
-    <h1>Welcome, {{ managerName }}!</h1>
+  <div *ngIf="EmployeeName">
+    <h1>Welcome, {{ EmployeeName }}!</h1>
   </div>
   <button (click)="logout()">Logout</button>
 </div>
@@ -25,17 +25,69 @@
   <h3 style="margin-top: 30px;">Your Documents</h3>
 
   <ul *ngIf="documents.length > 0; else noDocs">
-    <li *ngFor="let doc of documents" style="margin-bottom: 15px;">
+    <li *ngFor="let doc of documents" style="margin-bottom: 15px; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
       <div>
         <strong>Type:</strong> {{ doc.type }} <br />
         <strong>Document Number:</strong> {{ doc.documentNumber }} <br />
-        <strong>Status:</strong> {{ doc.verifiedStatus }} <br />
+  
+        <!-- Manager Verification -->
+        <ng-container *ngIf="doc.verifiedStatus === 'PENDING'; else managerInfo">
+          <strong>Status:</strong> 🕒 Waiting for Manager to verify this document. <br />
+        </ng-container>
+        <ng-template #managerInfo>
+          <strong>Manager:</strong> {{ doc.verifiedBy?.name || 'N/A' }} <br />
+          <strong>Manager Status:</strong>
+          <span [ngClass]="{
+            'text-green-600': doc.verifiedStatus === 'APPROVED',
+            'text-red-600': doc.verifiedStatus === 'REJECTED'
+          }">{{ doc.verifiedStatus }}</span> <br />
+          <strong>Manager Comment:</strong> {{ doc.comment || 'No comment' }} <br />
+        </ng-template>
+  
+        <!-- HR Verification - Only show if Manager approves -->
+        <ng-container *ngIf="doc.verifiedStatus === 'APPROVED'">
+          <ng-container *ngIf="doc.finalVerifiedStatus === 'PENDING'; else hrInfo">
+            <strong>Status:</strong> 🕒 Waiting for HR to verify this document. <br />
+          </ng-container>
+          <ng-template #hrInfo>
+            <strong>HR:</strong> {{ doc.finalVerifiedBy?.name || 'N/A' }} <br />
+            <strong>HR Status:</strong>
+            <span [ngClass]="{
+              'text-green-600': doc.finalVerifiedStatus === 'APPROVED',
+              'text-red-600': doc.finalVerifiedStatus === 'REJECTED'
+            }">{{ doc.finalVerifiedStatus }}</span> <br />
+            <strong>HR Comment:</strong> {{ doc.finalComment || 'No comment' }} <br />
+          </ng-template>
+        </ng-container>
+  
+        <!-- Display HR status only if the manager approves -->
+        <ng-container *ngIf="doc.verifiedStatus === 'REJECTED'">
+          <strong>Manager Comment:</strong> {{ doc.comment || 'No comment' }} <br />
+        
+          <div>
+            <input type="file" (change)="onFileSelected($event, doc._id)" />
+            <button (click)="reuploadFile(doc._id)">Reupload</button>
+          </div>
+        </ng-container>
+        
+        
+  
         <a [href]="'http://localhost:5000' + doc.fileUrl" target="_blank">
           <button>Preview / Download</button>
         </a>
       </div>
     </li>
   </ul>
+  
+  <ng-template #noDocs>
+    <p>No documents uploaded yet.</p>
+  </ng-template>
+  
+  
+  <ng-template #noDocs>
+    <p>No documents uploaded yet.</p>
+  </ng-template>
+  
 
   <ng-template #noDocs>
     <p>No documents uploaded yet.</p>

@@ -4,7 +4,9 @@ const { createProfile, getProfile } = require('../controllers/employee.controlle
 const verifyUser = require('../middlewares/auth.middleware');  // Correct middleware import
 const roleMiddleware = require('../middlewares/role.middleware');  // Correct middleware import
 const User = require('../models/User');
-
+const authMiddleware=require('../middlewares/auth.middleware');
+const Document = require('../models/Document'); // ✅ Add this line
+const Employee = require('../models/Employee');
 // Route for creating a profile (only EMPLOYEE can access)
 router.post('/profile', verifyUser, roleMiddleware(['EMPLOYEE']), createProfile);
 
@@ -26,5 +28,12 @@ router.get('/users/:employeeId', async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   });
+
+
+// This assumes authMiddleware sets req.user._id to the logged-in employee
+router.get('/documents', authMiddleware, async (req, res) => {
+  
+});
+
 
 module.exports = router;

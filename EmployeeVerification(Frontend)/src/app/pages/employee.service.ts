@@ -31,4 +31,15 @@ export class EmployeeService {
 
     return this.http.get('http://localhost:5000/api/documents/my-documents', { headers });
   }
+
+  //reupload documents
+  reuploadDocument(docId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+  
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    return this.http.patch(`http://localhost:5000/api/documents/reupload/${docId}`, formData, { headers });
+  }
 }

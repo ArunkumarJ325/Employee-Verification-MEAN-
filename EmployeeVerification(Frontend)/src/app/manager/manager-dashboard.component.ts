@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 interface Document {
   _id: string;
   documentNumber: string;
-  documentType: string; // or `type` depending on your backend field
+  type: string; // or `type` depending on your backend field
   fileUrl: string;
   verifiedStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
   verifiedBy?: string;
