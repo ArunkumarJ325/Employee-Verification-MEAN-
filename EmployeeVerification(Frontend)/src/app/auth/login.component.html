@@ -1,4 +1,4 @@
-<h2>Login</h2>
+<!-- <h2>Login</h2>
 <form [formGroup]="form" (ngSubmit)="login()">
   <input type="email" formControlName="email" placeholder="Email" /><br />
   <input type="password" formControlName="password" placeholder="Password" /><br />
@@ -9,4 +9,22 @@
   Don't have an account?
   <a routerLink="/auth/register">Register here</a>
 </p>
+ -->
 
+ <div class="full-page">
+  <div class="container">
+    <div class="heading">Welcome to Employee Verification Portal</div>
+
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <h2>Login</h2>
+      <input type="email" formControlName="email" placeholder="Email" /><br />
+      <input type="password" formControlName="password" placeholder="Password" /><br />
+      <button type="submit">Login</button>
+    </form>
+
+    <p>
+      Don't have an account?
+      <a routerLink="/auth/register">Register here</a>
+    </p>
+  </div>
+</div>

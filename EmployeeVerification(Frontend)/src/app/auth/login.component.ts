@@ -8,7 +8,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule,RouterModule],
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;

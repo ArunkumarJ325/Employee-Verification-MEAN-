@@ -11,6 +11,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   selector: 'app-employee-dashboard',
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './employee-dashboard.component.html',
+  styleUrl:'./employee-dashboard.component.scss'
 })
 export class EmployeeDashboardComponent implements OnInit {
   profile: any = null;

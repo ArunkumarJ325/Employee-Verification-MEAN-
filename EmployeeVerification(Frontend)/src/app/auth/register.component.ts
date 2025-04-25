@@ -8,7 +8,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   selector: 'app-register',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
+  styleUrl:'./register.component.scss'
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
