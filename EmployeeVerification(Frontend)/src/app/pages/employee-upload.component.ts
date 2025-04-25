@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
   standalone: true,
   selector: 'app-employee-upload',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './employee-upload.component.html'
+  templateUrl: './employee-upload.component.html',
+  styleUrl:'./employee-upload.component.scss'
 })
 export class EmployeeUploadComponent implements OnInit {
   form: FormGroup;

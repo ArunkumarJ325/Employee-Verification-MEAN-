@@ -1,15 +1,15 @@
 <!-- Top Bar: Welcome + Logout (Always visible) -->
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
   <div *ngIf="EmployeeName">
     <h1>Welcome, {{ EmployeeName }}!</h1>
   </div>
   <button (click)="logout()">Logout</button>
-</div>
+</div> -->
 
 <!-- Profile Exists -->
-<div *ngIf="profile !== null; else profilenotfound">
+<!-- <div *ngIf="profile !== null; else profilenotfound"> -->
   <!-- Profile Info -->
-  <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+  <!-- <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
     <p><strong>Address:</strong> {{ profile.address }}</p>
     <p><strong>Years of Experience:</strong> {{ profile.yearsOfExperience }}</p>
     <p><strong>Previous Companies:</strong></p>
@@ -19,19 +19,19 @@
     <p><strong>Status:</strong> {{ profile.status }}</p>
     <p><strong>Aadhar Number:</strong> {{ profile.aadharNumber }}</p>
     <p><strong>PAN Number:</strong> {{ profile.panNumber }}</p>
-  </div>
+  </div> -->
 
   <!-- Documents -->
-  <h3 style="margin-top: 30px;">Your Documents</h3>
+  <!-- <h3 style="margin-top: 30px;">Your Documents</h3>
 
   <ul *ngIf="documents.length > 0; else noDocs">
     <li *ngFor="let doc of documents" style="margin-bottom: 15px; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
       <div>
         <strong>Type:</strong> {{ doc.type }} <br />
-        <strong>Document Number:</strong> {{ doc.documentNumber }} <br />
+        <strong>Document Number:</strong> {{ doc.documentNumber }} <br /> -->
   
         <!-- Manager Verification -->
-        <ng-container *ngIf="doc.verifiedStatus === 'PENDING'; else managerInfo">
+        <!-- <ng-container *ngIf="doc.verifiedStatus === 'PENDING'; else managerInfo">
           <strong>Status:</strong> 🕒 Waiting for Manager to verify this document. <br />
         </ng-container>
         <ng-template #managerInfo>
@@ -42,10 +42,10 @@
             'text-red-600': doc.verifiedStatus === 'REJECTED'
           }">{{ doc.verifiedStatus }}</span> <br />
           <strong>Manager Comment:</strong> {{ doc.comment || 'No comment' }} <br />
-        </ng-template>
+        </ng-template> -->
   
         <!-- HR Verification - Only show if Manager approves -->
-        <ng-container *ngIf="doc.verifiedStatus === 'APPROVED'">
+        <!-- <ng-container *ngIf="doc.verifiedStatus === 'APPROVED'">
           <ng-container *ngIf="doc.finalVerifiedStatus === 'PENDING'; else hrInfo">
             <strong>Status:</strong> 🕒 Waiting for HR to verify this document. <br />
           </ng-container>
@@ -58,15 +58,14 @@
             }">{{ doc.finalVerifiedStatus }}</span> <br />
             <strong>HR Comment:</strong> {{ doc.finalComment || 'No comment' }} <br />
           </ng-template>
-        </ng-container>
+        </ng-container> -->
   
         <!-- Display HR status only if the manager approves -->
-        <ng-container *ngIf="doc.verifiedStatus === 'REJECTED'">
-          <strong>Manager Comment:</strong> {{ doc.comment || 'No comment' }} <br />
-        
-          <div>
+        <!-- <ng-container *ngIf="doc.verifiedStatus === 'REJECTED' || doc.finalVerifiedStatus === 'REJECTED'">
+          <div style="margin-top: 10px;">
+            <label>Reupload File:</label>
             <input type="file" (change)="onFileSelected($event, doc._id)" />
-            <button (click)="reuploadFile(doc._id)">Reupload</button>
+            <button (click)="reuploadFile(doc._id)" [disabled]="!selectedFiles[doc._id]">Submit</button>
           </div>
         </ng-container>
         
@@ -91,20 +90,20 @@
 
   <ng-template #noDocs>
     <p>No documents uploaded yet.</p>
-  </ng-template>
+  </ng-template> -->
 
   <!-- Upload -->
-  <button routerLink="/employee/upload" style="margin-top: 20px;">Upload New Document</button>
-</div>
+  <!-- <button routerLink="/employee/upload" style="margin-top: 20px;">Upload New Document</button>
+</div> -->
 
 <!-- Profile Not Created: Create Profile Form -->
-<ng-template #profilenotfound>
+<!-- <ng-template #profilenotfound>
   <div style="text-align: center; padding: 30px;">
     <h2>👤 Profile Not Found</h2>
-    <p>You haven't created your profile yet. Please fill in the details below.</p>
+    <p>You haven't created your profile yet. Please fill in the details below.</p> -->
 
     <!-- Profile Creation Form -->
-    <form (ngSubmit)="createProfile()">
+    <!-- <form (ngSubmit)="createProfile()">
       <div>
         <label for="name">Name:</label>
         <input type="text" id="name" [(ngModel)]="profileData.name" name="name" required />
@@ -141,6 +140,133 @@
       </div>
 
       <button type="submit" style="margin-top: 20px;">Create Profile</button>
+    </form>
+  </div>
+</ng-template> -->
+
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div *ngIf="EmployeeName">
+    <h1>Welcome, {{ EmployeeName }}!</h1>
+  </div>
+  <button (click)="logout()">Logout</button>
+</div>
+
+<!-- Profile Exists -->
+<div *ngIf="profile !== null; else profilenotfound" class="dashboard-container">
+  <div class="card">
+    <h2>Profile Information</h2>
+    <p><strong>Address:</strong> {{ profile.address }}</p>
+    <p><strong>Years of Experience:</strong> {{ profile.yearsOfExperience }}</p>
+    <p><strong>Previous Companies:</strong></p>
+    <ul>
+      <li *ngFor="let company of profile.previousCompanies">{{ company }}</li>
+    </ul>
+    <p><strong>Status:</strong> {{ profile.status }}</p>
+    <p><strong>Aadhar Number:</strong> {{ profile.aadharNumber }}</p>
+    <p><strong>PAN Number:</strong> {{ profile.panNumber }}</p>
+  </div>
+
+  <div class="card">
+    <h3>Your Documents</h3>
+
+    <ul *ngIf="documents.length > 0; else noDocs">
+      <li *ngFor="let doc of documents" class="doc-item">
+        <div>
+          <strong>Type:</strong> {{ doc.type }} <br />
+          <strong>Document Number:</strong> {{ doc.documentNumber }} <br />
+
+          <!-- Manager Verification -->
+          <ng-container *ngIf="doc.verifiedStatus === 'PENDING'; else managerInfo">
+            <strong>Status:</strong> 🕒 Waiting for Manager to verify this document. <br />
+          </ng-container>
+          <ng-template #managerInfo>
+            <strong>Manager:</strong> {{ doc.verifiedBy?.name || 'N/A' }} <br />
+            <strong>Manager Status:</strong>
+            <span [ngClass]="{
+              'text-green-600': doc.verifiedStatus === 'APPROVED',
+              'text-red-600': doc.verifiedStatus === 'REJECTED'
+            }">{{ doc.verifiedStatus }}</span><br />
+            <strong>Manager Comment:</strong> {{ doc.comment || 'No comment' }} <br />
+          </ng-template>
+
+          <!-- HR Verification - Only show if Manager approves -->
+          <ng-container *ngIf="doc.verifiedStatus === 'APPROVED'">
+            <ng-container *ngIf="doc.finalVerifiedStatus === 'PENDING'; else hrInfo">
+              <strong>Status:</strong> 🕒 Waiting for HR to verify this document. <br />
+            </ng-container>
+            <ng-template #hrInfo>
+              <strong>HR:</strong> {{ doc.finalVerifiedBy?.name || 'N/A' }} <br />
+              <strong>HR Status:</strong>
+              <span [ngClass]="{
+                'text-green-600': doc.finalVerifiedStatus === 'APPROVED',
+                'text-red-600': doc.finalVerifiedStatus === 'REJECTED'
+              }">{{ doc.finalVerifiedStatus }}</span> <br />
+              <strong>HR Comment:</strong> {{ doc.finalComment || 'No comment' }} <br />
+            </ng-template>
+          </ng-container>
+
+          <!-- Reupload if rejected -->
+          <ng-container *ngIf="doc.verifiedStatus === 'REJECTED' || doc.finalVerifiedStatus === 'REJECTED'">
+            <div class="reupload-container">
+              <label>Reupload File:</label>
+              <input type="file" (change)="onFileSelected($event, doc._id)" />
+              <button (click)="reuploadFile(doc._id)" [disabled]="!selectedFiles[doc._id]">Submit</button>
+            </div>
+          </ng-container>
+
+          <a [href]="'http://localhost:5000' + doc.fileUrl" target="_blank">
+            <button class="button">Preview / Download</button>
+          </a>
+        </div>
+      </li>
+    </ul>
+
+    <ng-template #noDocs>
+      <p>No documents uploaded yet.</p>
+    </ng-template>
+
+    <button routerLink="/employee/upload" class="button">Upload New Document</button>
+  </div>
+</div>
+
+<!-- Profile Creation Form -->
+<ng-template #profilenotfound>
+  <div class="form-container">
+    <h2>👤 Profile Not Found</h2>
+    <p>Please fill in your profile information below:</p>
+
+    <form (ngSubmit)="createProfile()" class="form-grid">
+      <label>Name:
+        <input type="text" [(ngModel)]="profileData.name" name="name" required />
+      </label>
+
+      <label>Address:
+        <input type="text" [(ngModel)]="profileData.address" name="address" required />
+      </label>
+
+      <label>Years of Experience:
+        <input type="number" [(ngModel)]="profileData.yearsOfExperience" name="yearsOfExperience" required />
+      </label>
+
+      <label>Previous Companies:
+        <input type="text" [(ngModel)]="profileData.previousCompanies" name="previousCompanies" required />
+      </label>
+
+      <label>Status:
+        <input type="text" [(ngModel)]="profileData.status" name="status" required />
+      </label>
+
+      <label>Aadhar Number:
+        <input type="text" [(ngModel)]="profileData.aadharNumber" name="aadharNumber" required />
+      </label>
+
+      <label>PAN Number:
+        <input type="text" [(ngModel)]="profileData.panNumber" name="panNumber" required />
+      </label>
+
+      <button type="submit" class="button full-width">Create Profile</button>
     </form>
   </div>
 </ng-template>

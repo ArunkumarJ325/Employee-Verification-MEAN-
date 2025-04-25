@@ -32,7 +32,8 @@ interface EmployeeGroup {
   standalone: true,
   selector: 'app-manager-dashboard',
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './manager-dashboard.component.html'
+  templateUrl: './manager-dashboard.component.html',
+  styleUrl:'./manager-dashboard.component.scss'
 })
 export class ManagerDashboardComponent implements OnInit {
   groupedDocs: EmployeeGroup[] = [];

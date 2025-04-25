@@ -1,0 +1,312 @@
+// :host {
+//     display: block;
+//     background: linear-gradient(to right, #3498db, #d3d3d3, #ffffff);
+//     min-height: 100vh;
+//     padding: 20px;
+//     font-family: 'Segoe UI', sans-serif;
+//   }
+  
+//   /* Container for Header and Logout Button */
+//   div {
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     margin-bottom: 20px;
+//   }
+  
+//   /* Heading Styling */
+//   h2, h3 {
+//     color: #2c3e50;
+//     font-size: 2.2rem;
+//     font-weight: 700;
+//     position: relative;
+//   }
+  
+//   h2::after, h3::after {
+//     content: '';
+//     position: absolute;
+//     bottom: -10px;
+//     left: 50%;
+//     transform: translateX(-50%);
+//     width: 80px;
+//     height: 4px;
+//     background-color: #3498db;
+//     border-radius: 2px;
+//   }
+  
+//   h3 {
+//     font-size: 1.8rem;
+//     font-weight: 600;
+//     margin-top: 30px;
+//   }
+  
+//   /* Button Styling */
+//   button {
+//     background-color: #2980b9;
+//     color: white;
+//     padding: 10px 20px;
+//     border: none;
+//     border-radius: 8px;
+//     cursor: pointer;
+//     font-weight: 500;
+//     transition: background-color 0.3s ease;
+//   }
+  
+//   button:hover {
+//     background-color: #21618c;
+//   }
+  
+//   button:disabled {
+//     background-color: #95a5a6;
+//     cursor: not-allowed;
+//   }
+  
+//   /* List Styling */
+//   ul {
+//     list-style-type: none;
+//     padding: 0;
+//   }
+  
+//   li {
+//     padding: 10px 0;
+//     border-bottom: 1px solid #ccc;
+//     cursor: pointer;
+//   }
+  
+//   li:hover {
+//     background-color: #f1f1f1;
+//   }
+  
+//   li p {
+//     margin: 0;
+//     font-size: 1.1rem;
+//   }
+  
+//   li a {
+//     color: #3498db;
+//     text-decoration: none;
+//     font-weight: 500;
+//   }
+  
+//   li a:hover {
+//     text-decoration: underline;
+//   }
+  
+//   /* Document Status Color */
+//   span {
+//     font-weight: bold;
+//   }
+  
+//   /* Orange color for Pending status */
+//   span[ngStyle="color: orange"] {
+//     color: orange;
+//   }
+  
+//   /* Green color for Approved status */
+//   span[ngStyle="color: green"] {
+//     color: green;
+//   }
+  
+//   /* Red color for Rejected status */
+//   span[ngStyle="color: red"] {
+//     color: red;
+//   }
+  
+//   /* Manager comment section */
+//   textarea {
+//     width: 100%;
+//     padding: 12px 16px;
+//     border-radius: 8px;
+//     border: 1px solid #ccc;
+//     font-size: 1rem;
+//     margin-bottom: 10px;
+//     box-sizing: border-box;
+//   }
+  
+//   textarea:focus {
+//     border-color: #2980b9;
+//     outline: none;
+//     box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+//   }
+  
+//   textarea::placeholder {
+//     color: #aaa;
+//   }
+  
+//   /* HR Status and Comment */
+//   p strong {
+//     font-weight: 600;
+//   }
+  
+//   p {
+//     margin: 5px 0;
+//   }
+  
+//   /* HR Status and Comments Styling */
+//   div > p {
+//     font-size: 1rem;
+//     color: #555;
+//   }
+  
+//   /* Pending Section Styling */
+//   .pending-section h2::after {
+//     width: 100px; /* Increased length for pending */
+//   }
+  
+//   .pending-section li {
+//     background-color: #fff3e6; /* Light background color for pending */
+//   }
+  
+//   /* Completed Section Styling */
+//   .completed-section h2::after {
+//     width: 120px; /* Increased length for completed */
+//   }
+  
+//   .completed-section li {
+//     background-color: #e6ffe6; /* Light background color for completed */
+//   }
+  
+
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(to right, #3498db, #d3d3d3, #ffffff);
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Top Bar */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #216bb6;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+  
+  .top-bar h2 {
+    font-size: 1.8rem;
+    color: white;
+    margin: 0;
+  }
+  
+  .top-bar button{
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .top-bar button:hover {
+    background-color: #c0392b;
+  }
+
+  button {
+    background-color: #2980b9;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #21618c;
+  }
+  
+  /* Main Flex Container */
+  .main-content {
+    display: flex;
+    gap: 30px;
+  }
+  
+  /* Cards */
+  .card {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    height: fit-content;
+  }
+  
+  .card h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+  }
+  
+  .card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .card li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .card li:hover {
+    background-color: #e3f2fd;
+  }
+  
+  /* Side Panel */
+  .details-panel {
+    flex-grow: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  /* Document block */
+  .document {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .document p {
+    margin: 4px 0;
+  }
+  
+  textarea {
+    width: 100%;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    resize: vertical;
+  }
+  
+  span {
+    font-weight: bold;
+  }
+  
+  a {
+    color: #3498db;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  

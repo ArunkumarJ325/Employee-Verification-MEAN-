@@ -1,4 +1,4 @@
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
   <h2>
     Welcome, {{ managerName }} 👋
   </h2>
@@ -32,30 +32,110 @@
         <span [ngStyle]="{ color: doc.verifiedStatus === 'PENDING' ? 'orange' : (doc.verifiedStatus === 'APPROVED' ? 'green' : 'red') }">
           {{ doc.verifiedStatus }}
         </span>
-      </p>
+      </p> -->
 
       <!-- 🔗 File preview -->
-      <a *ngIf="doc.fileUrl" [href]="'http://localhost:5000' + doc.fileUrl" target="_blank">
+      <!-- <a *ngIf="doc.fileUrl" [href]="'http://localhost:5000' + doc.fileUrl" target="_blank">
         📄 Preview / Download
-      </a>
+      </a> -->
 
       <!-- 💬 Manager comment -->
-      <div *ngIf="doc.verifiedStatus !== 'PENDING'">
+      <!-- <div *ngIf="doc.verifiedStatus !== 'PENDING'">
         <p><strong>Manager Comment:</strong> {{ doc.comment || 'No comment' }}</p>
-      </div>
+      </div> -->
 
       <!-- ✅ HR verification display -->
-      <div *ngIf="doc.finalVerifiedStatus">
+      <!-- <div *ngIf="doc.finalVerifiedStatus">
         <p><strong>HR Final Status:</strong> {{ doc.finalVerifiedStatus }}</p>
         <p><strong>HR Comment:</strong> {{ doc.finalComment || 'No comment' }}</p>
-      </div>
+      </div> -->
 
       <!-- 🟠 Manager actions only if pending -->
-      <div *ngIf="doc.verifiedStatus === 'PENDING' && doc._id">
+      <!-- <div *ngIf="doc.verifiedStatus === 'PENDING' && doc._id">
         <textarea [(ngModel)]="doc.comment" placeholder="Add comment (optional)"></textarea>
         <button (click)="verify(doc._id, 'APPROVED', doc.comment)">Approve</button>
         <button (click)="verify(doc._id, 'REJECTED', doc.comment)" style="margin-left: 10px;">Reject</button>
       </div>
     </li>
   </ul>
+</div> -->
+
+
+<!-- 🌟 Top Bar -->
+<div class="top-bar">
+  <h2>Welcome, {{ managerName }}</h2>
+  <button (click)="logout()">Logout</button>
+</div>
+
+<!-- 🧱 Main Section -->
+<div class="main-content">
+  <!-- 🟠 Pending -->
+  <div class="card">
+    <h3>Pending Approvals</h3>
+    <ul>
+      <li *ngFor="let group of pendingGroups" (click)="selectEmployee(group)">
+        {{ group.employee.name }} ({{ group.employee.employeeId }})
+      </li>
+    </ul>
+  </div>
+
+  <!-- ✅ Completed -->
+  <div class="card">
+    <h3>Completed Approvals</h3>
+    <ul>
+      <li *ngFor="let group of completedGroups" (click)="selectEmployee(group)">
+        {{ group.employee.name }} ({{ group.employee.employeeId }})
+      </li>
+    </ul>
+  </div>
+
+  <!-- 📄 Details Panel -->
+  <div *ngIf="selectedEmployee" class="details-panel">
+    <h3>Documents for {{ selectedEmployee.employee.name }}</h3>
+    <ul>
+      <li *ngFor="let doc of selectedEmployee.documents" class="document">
+        <p><strong>Type:</strong> {{ doc.type }}</p>
+        <p><strong>Number:</strong> {{ doc.documentNumber }}</p>
+        <p>
+          <strong>Status:</strong>
+          <span [ngStyle]="{ color: doc.verifiedStatus === 'PENDING' ? 'orange' : (doc.verifiedStatus === 'APPROVED' ? 'green' : 'red') }">
+            {{ doc.verifiedStatus }}
+          </span>
+        </p>
+
+        <a *ngIf="doc.fileUrl" [href]="'http://localhost:5000' + doc.fileUrl" target="_blank">
+          📄 Preview / Download
+        </a>
+
+        <!-- Manager comment (if already verified) -->
+        <div *ngIf="doc.verifiedStatus !== 'PENDING'">
+          <p><strong>Manager Comment:</strong> {{ doc.comment || 'No comment' }}</p>
+        </div>
+
+        <!-- HR Status -->
+        <div *ngIf="doc.finalVerifiedStatus">
+          <p><strong>HR Final Status:</strong> {{ doc.finalVerifiedStatus }}</p>
+          <p><strong>HR Comment:</strong> {{ doc.finalComment || 'No comment' }}</p>
+        </div>
+        <div *ngIf="doc.finalVerifiedStatus && doc.finalVerifiedStatus !== 'PENDING'">
+          <p>
+            <strong>HR Final Status:</strong>
+            <span [ngStyle]="{
+              color: doc.finalVerifiedStatus === 'APPROVED' ? 'green' :
+                     (doc.finalVerifiedStatus === 'REJECTED' ? 'red' : 'orange')
+            }">
+              {{ doc.finalVerifiedStatus }}
+            </span>
+          </p>
+          <p><strong>HR Comment:</strong> {{ doc.finalComment || 'No comment' }}</p>
+        </div>
+        <!-- Action buttons -->
+        <div *ngIf="doc.verifiedStatus === 'PENDING' && doc._id">
+          <textarea [(ngModel)]="doc.comment" placeholder="Add comment (optional)"></textarea>
+          <button (click)="verify(doc._id, 'APPROVED', doc.comment)">Approve</button>
+          <button (click)="verify(doc._id, 'REJECTED', doc.comment)" style="margin-left: 10px;">Reject</button>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>

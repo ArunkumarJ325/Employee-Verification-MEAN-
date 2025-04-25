@@ -8,7 +8,8 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   selector: 'app-hr-dashboard',
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl:'./hr-dashboard.component.html'
+  templateUrl:'./hr-dashboard.component.html',
+  styleUrl:'./hr-dashboard.component.scss'
 })
 export class HrDashboardComponent implements OnInit {
   hrName: string = '';
