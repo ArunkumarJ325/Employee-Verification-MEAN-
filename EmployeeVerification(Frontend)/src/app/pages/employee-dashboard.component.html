@@ -61,12 +61,11 @@
         </ng-container>
   
         <!-- Display HR status only if the manager approves -->
-        <ng-container *ngIf="doc.verifiedStatus === 'REJECTED'">
-          <strong>Manager Comment:</strong> {{ doc.comment || 'No comment' }} <br />
-        
-          <div>
+        <ng-container *ngIf="doc.verifiedStatus === 'REJECTED' || doc.finalVerifiedStatus === 'REJECTED'">
+          <div style="margin-top: 10px;">
+            <label>Reupload File:</label>
             <input type="file" (change)="onFileSelected($event, doc._id)" />
-            <button (click)="reuploadFile(doc._id)">Reupload</button>
+            <button (click)="reuploadFile(doc._id)" [disabled]="!selectedFiles[doc._id]">Submit</button>
           </div>
         </ng-container>
         

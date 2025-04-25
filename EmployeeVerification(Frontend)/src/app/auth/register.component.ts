@@ -25,7 +25,7 @@ export class RegisterComponent implements OnInit {
       employeeId: [''],
       email: [''],
       password: [''],
-      role: [''] // default
+      role: ['EMPLOYEE'] // default
     });
   }
   
