@@ -2,6 +2,8 @@
 const Document = require('../models/Document');
 const User = require('../models/User');
 const Employee = require('../models/Employee');
+const mongoose = require('mongoose');
+const sendEmail = require('../utils/sendEmail'); // or your email utility path
 const uploadDocument = async (req, res) => {
   try {
     const { documentNumber, type } = req.body;
@@ -25,6 +27,7 @@ const uploadDocument = async (req, res) => {
     if (type === 'PAN' && userProfile.panNumber !== documentNumber) {
       return res.status(400).json({ message: 'Invalid PAN number' });
     }
+    
 
     // Allow other types without checking the profile
     const newDoc = await Document.create({
@@ -69,11 +72,13 @@ const verifyDocument = async (req, res) => {
   const documentId = req.params.id;
   const { verifiedStatus, comment } = req.body;
 
+  // Ensure status is either 'APPROVED' or 'REJECTED'
   if (!['APPROVED', 'REJECTED'].includes(verifiedStatus)) {
     return res.status(400).json({ message: "Invalid verification status" });
   }
 
   try {
+    // Find and update the document
     const updatedDoc = await Document.findByIdAndUpdate(
       documentId,
       {
@@ -83,21 +88,46 @@ const verifyDocument = async (req, res) => {
       },
       { new: true }
     );
-    console.log("Verified User Id"+req.user.id);
+
     if (!updatedDoc) {
       return res.status(404).json({ message: "Document not found" });
     }
 
+    // If document is rejected, send rejection email
+    if (verifiedStatus === 'REJECTED') {
+      const user = await User.findById(updatedDoc.uploadedBy);
+
+      if (user && user.email) {
+        const subject = '⚠️ Your document has been rejected by Manager';
+        const message = `
+Hello ${user.name || 'Employee'},
+
+Your document (${updatedDoc.type}) has been rejected by the Manager.
+
+❌ Status: Rejected
+📄 Document Type: ${updatedDoc.type}
+🔢 Document Number: ${updatedDoc.documentNumber}
+📝 Comment: ${comment || 'No comment provided'}
+
+Please review the comment and re-upload the document for further processing.
+
+- Employee Verification Portal
+        `;
+        await sendEmail(user.email, subject, message);
+      }
+    }
+
+    // Respond with success
     res.status(200).json({
       message: "Document status updated",
       document: updatedDoc
     });
+
   } catch (err) {
     console.error("Error updating document:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 const getMyDocuments = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -117,30 +147,81 @@ const getMyDocuments = async (req, res) => {
 };
 
 
+
+
+
 const hrVerifyDocument = async (req, res) => {
   try {
-    const documentId = req.params.id;
     const { finalVerifiedStatus, finalComment } = req.body;
-    const userId = req.user.id;
-    console.log("Request body in hr verify document :", req.body);
+    const docId = req.params.id;
+    const hrUserId = req.user.id;
 
-    const document = await Document.findById(documentId);
+    const document = await Document.findById(docId).populate('uploadedBy');
+
     if (!document) {
       return res.status(404).json({ message: 'Document not found' });
     }
-    console.log("Document found:", document);
 
     document.finalVerifiedStatus = finalVerifiedStatus;
     document.finalComment = finalComment;
-    document.finalVerifiedBy = userId;
-    console.log("Document found:", document);
-
+    document.finalVerifiedBy = new mongoose.Types.ObjectId(hrUserId);
     await document.save();
 
-    res.status(200).json({ message: 'Final HR verification updated', document });
+    // Fetch user from uploadedBy (which is a User ID)
+    const user = await User.findById(document.uploadedBy);
+
+    if (user && user.email) {
+      let subject, message;
+
+      // If document is approved, check if all documents are approved
+      if (finalVerifiedStatus === 'APPROVED') {
+        const allDocuments = await Document.find({ uploadedBy: document.uploadedBy });
+
+        // Check if all documents are approved
+        const allApproved = allDocuments.every(doc => doc.finalVerifiedStatus === 'APPROVED');
+
+        if (allApproved) {
+          subject = '🎉 Your document has been approved by HR!';
+          message = `
+Hello ${user.name || 'Employee'},
+
+Your documents have been successfully verified and approved by the HR team.
+
+✅ Status: Approved for all documents
+📄 Document Type(s): ${allDocuments.map(doc => doc.type).join(', ')}
+🔢 Document Number(s): ${allDocuments.map(doc => doc.documentNumber).join(', ')}
+
+Thank you for submitting your documents.
+
+- Employee Verification Portal
+          `;
+          await sendEmail(user.email, subject, message);
+        }
+      } else if (finalVerifiedStatus === 'REJECTED') {
+        // Send email when the document is rejected
+        subject = '⚠️ Your document has been rejected by HR';
+        message = `
+Hello ${user.name || 'Employee'},
+
+Unfortunately, your document (${document.type}) has been rejected during the final HR verification process.
+
+❌ Status: ${finalVerifiedStatus}
+📄 Document Type: ${document.type}
+🔢 Document Number: ${document.documentNumber}
+📝 Comment: ${finalComment || 'No comment provided'}
+
+Please review the comment and re-upload the document for further processing.
+
+- Employee Verification Portal
+        `;
+        await sendEmail(user.email, subject, message);
+      }
+    }
+
+    res.status(200).json({ message: 'Document reviewed by HR' });
   } catch (err) {
-    console.error('Error during HR verification:', err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Final verification error:', err);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
