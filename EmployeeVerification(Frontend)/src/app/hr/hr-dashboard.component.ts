@@ -76,7 +76,13 @@ export class HrDashboardComponent implements OnInit {
   
 
   selectEmployee(group: any) {
-    this.selectedEmployee = group;
+    this.selectedEmployee = {
+      ...group,
+      documents: [
+        ...group.documents.filter((doc: any) => doc.finalVerifiedStatus === 'PENDING'),
+        ...group.documents.filter((doc: any) => doc.finalVerifiedStatus !== 'PENDING')
+      ]
+    };
   }
 
   verifyHR(id: string, status: string, comment: string | null | undefined) {

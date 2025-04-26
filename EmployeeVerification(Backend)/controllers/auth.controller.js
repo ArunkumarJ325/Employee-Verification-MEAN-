@@ -6,24 +6,18 @@ exports.registerUser = async (req, res) => {
   const { name, email, password, role, employeeId } = req.body;
 
   try {
-    // Check if the email already exists in the database
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
-      console.log("User already exists with email:", email);
       return res.status(400).json({ message: 'Email already exists' });
     }
 
-    // Check if the employeeId already exists in the database
     const existingEmployee = await User.findOne({ employeeId });
     if (existingEmployee) {
-      console.log("User already exists with employeeId:", employeeId);
       return res.status(400).json({ message: 'Employee ID already exists' });
     }
 
-    // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user object
     const newUser = new User({
       name,
       email,
@@ -32,14 +26,11 @@ exports.registerUser = async (req, res) => {
       employeeId,
     });
 
-    // Save the new user to the database
     await newUser.save();
-    console.log("User registered successfully:", newUser);
 
-    // Send success response
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
-    console.error("Registration Error:", err);  // 👈 key line
+    console.error("Registration Error:", err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };

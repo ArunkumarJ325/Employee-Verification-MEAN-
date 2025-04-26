@@ -237,36 +237,83 @@
     <h2>👤 Profile Not Found</h2>
     <p>Please fill in your profile information below:</p>
 
-    <form (ngSubmit)="createProfile()" class="form-grid">
+    <form (ngSubmit)="createProfile()" #profileForm="ngForm" class="form-grid">
+      
+      <!-- Name Field -->
       <label>Name:
-        <input type="text" [(ngModel)]="profileData.name" name="name" required />
+        <input type="text" [(ngModel)]="profileData.name" name="name" required #name="ngModel" />
       </label>
+      <div *ngIf="name.invalid && name.touched" class="error-message">
+        <small>Name is required</small>
+      </div>
 
+      <!-- Address Field -->
       <label>Address:
-        <input type="text" [(ngModel)]="profileData.address" name="address" required />
+        <input type="text" [(ngModel)]="profileData.address" name="address" required #address="ngModel" />
       </label>
+      <div *ngIf="address.invalid && address.touched" class="error-message">
+        <small>Address is required</small>
+      </div>
 
+      <!-- Years of Experience Field -->
       <label>Years of Experience:
-        <input type="number" [(ngModel)]="profileData.yearsOfExperience" name="yearsOfExperience" required />
+        <input type="number" [(ngModel)]="profileData.yearsOfExperience" name="yearsOfExperience" required #yearsOfExperience="ngModel" />
       </label>
+      <div *ngIf="yearsOfExperience.invalid && yearsOfExperience.touched" class="error-message">
+        <small>Years of Experience are required</small>
+      </div>
 
+      <!-- Previous Companies Field -->
       <label>Previous Companies:
-        <input type="text" [(ngModel)]="profileData.previousCompanies" name="previousCompanies" required />
+        <input type="text" [(ngModel)]="profileData.previousCompanies" name="previousCompanies" required #previousCompanies="ngModel" />
       </label>
+      <div *ngIf="previousCompanies.invalid && previousCompanies.touched" class="error-message">
+        <small>Previous Companies are required</small>
+      </div>
 
+      <!-- Status Field -->
       <label>Status:
-        <input type="text" [(ngModel)]="profileData.status" name="status" required />
+        <input type="text" [(ngModel)]="profileData.status" name="status" required #status="ngModel" />
       </label>
+      <div *ngIf="status.invalid && status.touched" class="error-message">
+        <small>Status is required</small>
+      </div>
 
+      <!-- Aadhar Number Field -->
       <label>Aadhar Number:
-        <input type="text" [(ngModel)]="profileData.aadharNumber" name="aadharNumber" required />
+        <input type="text"
+               [(ngModel)]="profileData.aadharNumber"
+               name="aadharNumber"
+               required
+               pattern="^[0-9]{12}$"
+               maxlength="12"
+               title="Aadhar number must be exactly 12 digits"
+               #aadharNumber="ngModel" />
       </label>
+      <div *ngIf="aadharNumber.invalid && aadharNumber.touched" class="error-message">
+        <small *ngIf="aadharNumber.errors?.['required']">Aadhar Number is required</small>
+        <small *ngIf="aadharNumber.errors?.['pattern']">Aadhar Number must be exactly 12 digits and N0 characters allowed</small>
+      </div>
 
+      <!-- PAN Number Field -->
       <label>PAN Number:
-        <input type="text" [(ngModel)]="profileData.panNumber" name="panNumber" required />
+        <input type="text"
+               [(ngModel)]="profileData.panNumber"
+               name="panNumber"
+               required
+               pattern="^[A-Z0-9]{10}$"
+               maxlength="10"
+               title="PAN number must be 10 alphanumeric characters (uppercase letters and numbers only)"
+               #panNumber="ngModel" />
       </label>
+      <div *ngIf="panNumber.invalid && panNumber.touched" class="error-message">
+        <small *ngIf="panNumber.errors?.['required']">PAN Number is required</small>
+        <small *ngIf="panNumber.errors?.['pattern']">PAN Number must be 10 alphanumeric characters (uppercase letters and numbers only)</small>
+      </div>
 
-      <button type="submit" class="button full-width">Create Profile</button>
+      <!-- Submit Button -->
+      <button type="submit" class="button full-width" [disabled]="profileForm.invalid">Create Profile</button>
     </form>
   </div>
 </ng-template>
+

@@ -1,32 +1,56 @@
-<!-- <h2>Register</h2>
-<form [formGroup]="form" (ngSubmit)="register()">
-  <input type="text" formControlName="name" placeholder="Name" /><br />
-  <input type="text" formControlName="employeeId" placeholder="Employee ID" /><br />
-  <input type="email" formControlName="email" placeholder="Email" /><br />
-  <input type="password" formControlName="password" placeholder="Password" /><br />
-  <select formControlName="role">
-    <option value="EMPLOYEE">Employee</option>
-    <option value="MANAGER">Manager</option>
-    <option value="HR">HR</option>
-  </select><br />
-  <button type="submit">Register</button>
-</form> -->
-
 <div class="register-container">
   <h2>Register</h2>
   <form [formGroup]="form" (ngSubmit)="register()">
-    <input type="text" formControlName="name" placeholder="Name" />
-    <input type="text" formControlName="employeeId" placeholder="Employee ID" />
-    <input type="email" formControlName="email" placeholder="Email" />
-    <input type="password" formControlName="password" placeholder="Password" />
     
-    <select formControlName="role">
-      <option value="" disabled selected>Select Role</option>
-      <option value="EMPLOYEE">Employee</option>
-      <option value="MANAGER">Manager</option>
-      <option value="HR">HR</option>
-    </select>
-    
-    <button type="submit">Register</button>
+    <!-- Name Field -->
+    <div class="form-group">
+      <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+        <small *ngIf="form.get('name')?.errors?.['required']">Name is required</small>
+      </div>
+      <input type="text" formControlName="name" placeholder="Name" />
+    </div>
+
+    <!-- Employee ID Field -->
+    <div class="form-group">
+      <div *ngIf="form.get('employeeId')?.invalid && form.get('employeeId')?.touched">
+        <small *ngIf="form.get('employeeId')?.errors?.['required']">Employee ID is required</small>
+        <small *ngIf="form.get('employeeId')?.errors?.['pattern']">Employee ID must be exactly 6 digits</small>
+      </div>
+      <input type="text" formControlName="employeeId" placeholder="Employee ID" />
+    </div>
+
+    <!-- Email Field -->
+    <div class="form-group">
+      <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+        <small *ngIf="form.get('email')?.errors?.['required']">Email is required</small>
+        <small *ngIf="form.get('email')?.errors?.['email']">Invalid email format</small>
+      </div>
+      <input type="email" formControlName="email" placeholder="Email" />
+    </div>
+
+    <!-- Password Field -->
+    <div class="form-group">
+      <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+        <small *ngIf="form.get('password')?.errors?.['required']">Password is required</small>
+        <small *ngIf="form.get('password')?.errors?.['minlength']">Password must be at least 8 characters long</small>
+        <small *ngIf="form.get('password')?.errors?.['pattern']">Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character</small>
+      </div>
+      <input type="password" formControlName="password" placeholder="Password" />
+    </div>
+
+    <!-- Role Field -->
+    <div class="form-group">
+      <div *ngIf="form.get('role')?.invalid && form.get('role')?.touched">
+        <small *ngIf="form.get('role')?.errors?.['required']">Role is required</small>
+      </div>
+      <select formControlName="role">
+        <option value="" disabled selected>Select Role</option>
+        <option value="EMPLOYEE">Employee</option>
+        <option value="MANAGER">Manager</option>
+        <option value="HR">HR</option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Register</button>
   </form>
 </div>

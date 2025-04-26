@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
 export class EmployeeUploadComponent implements OnInit {
   form: FormGroup;
   selectedFile: File | null = null;
-  
+  dynamicLabel: string = 'Enter Document Number';
+
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.form = this.fb.group({
       type: ['', Validators.required],
@@ -22,8 +23,33 @@ export class EmployeeUploadComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    console.log('Upload component loaded');;
+    console.log('Upload component loaded');
+    this.form.get('type')?.valueChanges.subscribe(type => {
+      this.updateLabel();
+    });
   }
+
+  updateLabel(): void {
+    const type = this.form.get('type')?.value;
+    switch (type) {
+      case 'AADHAR':
+        this.dynamicLabel = 'Enter Aadhar Number';
+        break;
+      case 'PAN':
+        this.dynamicLabel = 'Enter PAN Number';
+        break;
+      case 'ADDRESS_PROOF':
+        this.dynamicLabel = 'Enter EB Bill Number';
+        break;
+      case 'QUALIFICATION':
+        this.dynamicLabel = 'Enter University Registration Number';
+        break;
+      default:
+        this.dynamicLabel = 'Enter Document Number';
+    }
+  }
+  
+
   
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
